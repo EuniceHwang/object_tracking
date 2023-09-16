@@ -46,7 +46,7 @@ namespace object_tracking
                 Cv.Copy(src, copy);
 
                 IplImage nobg = RemoveBackground(copy, background);
-                IplImage output = TrackAndDrawBall(nobg, background);
+                IplImage output = TrackAndDrawBall(nobg);
 
                 pictureBoxIpl1.ImageIpl = output;
             }
@@ -90,10 +90,8 @@ namespace object_tracking
             return input2.ToIplImage();
         }
 
-        public IplImage TrackAndDrawBall(IplImage input, IplImage background)
+        public IplImage TrackAndDrawBall(IplImage input)
         {
-            IplImage blobImage = new IplImage(input.Size, BitDepth.U8, 3);
-
             // Blob 라벨링하여 농구공을 추적
             CvBlobs blobs = new CvBlobs();
             blobs.Label(input);
