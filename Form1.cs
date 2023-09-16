@@ -78,7 +78,7 @@ namespace object_tracking
 
             // 모폴로지 연산을 사용하여 노이즈 제거
             IplConvKernel element = new IplConvKernel(8, 8, 1, 1, ElementShape.Ellipse);
-            Cv.MorphologyEx(bin, bin, src, element, MorphologyOperation.Open, 3);
+            Cv.MorphologyEx(bin, bin, bin, element, MorphologyOperation.Open, 3);
 
             // 영상과 이진화된 농구공 추출 영상 비트연산하여 배경제거
             Mat input1 = new Mat(input);
