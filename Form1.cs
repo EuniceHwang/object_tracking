@@ -130,6 +130,7 @@ namespace object_tracking
             Cv.ReleaseImage(copy);
             Cv.ReleaseImage(bin);
             Cv.ReleaseImage(background);
+            Cv.ReleaseImage(ball);
         }
     }
 }
