@@ -18,6 +18,7 @@ namespace object_tracking
         IplImage background;
         IplImage copy;
         IplImage bin;
+        IplImage ball;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -46,7 +47,7 @@ namespace object_tracking
                 Cv.Copy(src, copy);
 
                 IplImage nobg = RemoveBackground(copy, background);
-                IplImage output = TrackAndDrawBall(nobg, background);
+                IplImage output = TrackAndDrawBall(nobg);
 
                 pictureBoxIpl1.ImageIpl = output;
             }
@@ -78,7 +79,7 @@ namespace object_tracking
 
             // 모폴로지 연산을 사용하여 노이즈 제거
             IplConvKernel element = new IplConvKernel(8, 8, 1, 1, ElementShape.Ellipse);
-            Cv.MorphologyEx(bin, bin, src, element, MorphologyOperation.Open, 3);
+            Cv.MorphologyEx(bin, bin, bin, element, MorphologyOperation.Open, 3);
 
             // 영상과 이진화된 농구공 추출 영상 비트연산하여 배경제거
             Mat input1 = new Mat(input);
@@ -87,16 +88,16 @@ namespace object_tracking
 
             Cv2.BitwiseAnd(input1, input2.CvtColor(ColorConversion.GrayToBgr), bitwise);
 
-            return input2.ToIplImage();
+            return bitwise.ToIplImage();
         }
 
-        public IplImage TrackAndDrawBall(IplImage input, IplImage background)
+        public IplImage TrackAndDrawBall(IplImage input)
         {
-            IplImage blobImage = new IplImage(input.Size, BitDepth.U8, 3);
-
             // Blob 라벨링하여 농구공을 추적
+            ball = new IplImage(input.Size, BitDepth.U8, 1);
+            Cv.CvtColor(input, ball, ColorConversion.BgrToGray);            
             CvBlobs blobs = new CvBlobs();
-            blobs.Label(input);
+            blobs.Label(ball);
 
             IplImage result = copy.Clone();
 
